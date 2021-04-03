@@ -4,7 +4,7 @@ import com.cavariux.twitchirc.Chat.Channel;
 
 public class Main {
 	
-	final static String[] channels = {"#exeloar", "#capp_kap"};
+	final static String[] channels = {"#exeloar"};
 	static long[] channelLastMaClocks = new long[channels.length]; 
 	
 	final static long version = 2L;

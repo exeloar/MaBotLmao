@@ -19,10 +19,9 @@ public class MyBot extends TwitchBot{
 	
 	//FIXME: ADD JOE MAMA
 	//FIXME: ADD "I barely know her"
-	//FIXME: Do not replace word if the trigger is not at the start or end of a word? (Maybe only for first word in message?)
 	public void onMessage(User user, Channel channelMa, String messageMa) {
 		
-		try { if(Math.abs(System.currentTimeMillis() - Main.getLastMaClock(channelMa)) < 15000) { return; } }
+		try { if(Math.abs(System.currentTimeMillis() - Main.getLastMaClock(channelMa)) < 45000) { return; } }
 		catch(Exception e) { System.out.println(e.getMessage()); }
 		
 		try{ Main.setLastMaClock(channelMa); } catch(Exception e) { System.out.println(e.getMessage()); }
@@ -31,7 +30,10 @@ public class MyBot extends TwitchBot{
 		String newMessageMa;
 		for(String triggerMa : triggers) {
 			indexMa = messageMa.toLowerCase().lastIndexOf(triggerMa);
-			if(indexMa != -1 && !(indexMa == 0 && messageMa.length() != triggerMa.length())) {
+			if(indexMa != -1 
+					&& !(indexMa == 0 && messageMa.length() != triggerMa.length()) 
+					&& (messageMa.charAt(indexMa-1)==' ' || indexMa+triggerMa.length() >= messageMa.length() || messageMa.charAt(indexMa+triggerMa.length())==' ' )
+			) {
 				newMessageMa = messageMa.substring(0,indexMa) + " " + messageMa.substring(indexMa,indexMa + triggerMa.length());
 				if(triggerMa.equals("saw")) { newMessageMa += " con"; }
 				if(triggerMa.equals("dragon") || triggerMa.equals("sugon") || triggerMa.equals("saw") || triggerMa.equals("sawcon")){ newMessageMa += " dese"; }
