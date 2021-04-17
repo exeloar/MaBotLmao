@@ -15,19 +15,44 @@ public class MyBot extends TwitchBot{
 		this.setOauth_Key("oauth:km7xcs8h16m032o7l6ky90z5v9mf48");
 	}
 	
-	final String[] triggers = {"ma", "dese", "dragon", "sucon","sawcon", "saw", "joe"};
-	Random random = new Random();
+	final String[] helpMessage = {
+			"Put a ! at the start of your message to start a command. The available commands are:",
+			"helpma - Display this message",
+			"addma - Add the bot to your channel",
+			"removema - Remove the bot from your channel",
+			"setdelayma ### -  Set the delay (in milliseconds) between ma messages lmao [default 1000]",
+			"setratioma ### - Set the chance of replacement (1:###) ex. 1 = 100%, 2 = 50%, etc. [default 1]",
+			"--More Configuration Settings Are Planned--"
+	};
 	
+	final String[] triggers = {"ma", "dese", "dragon", "sucon","sawcon", "saw", "joe", "candice"};
+	
+	
+	public void onWhisper(User user, String messageMa) {
+		messageMa = messageMa.replaceAll("!", "");
+		
+		String[] args = messageMa.split(" ");
+		for(int i = 0 ; i < args.length;i++) {
+			if(args[i].equals("addma")) { Main.addBotToChannel(user); }
+			if(args[i].equals("removema")) { Main.removeBotFromChannel(user);}
+			if(args[i].equals("setdelayma") && i!= args.length-1) { Main.setDelay(user,args[i+1]); }
+			if(args[i].equals("setratioma") && i!= args.length-1) { Main.setRatio(user,args[i+1]); }
+			
+			else {
+				for(String s: helpMessage) {
+					this.whisper(user, s);
+				}
+				return;
+			}
+		}	
+	}
+
 	//FIXME: ADD "I barely know her"
 	public void onMessage(User user, Channel channelMa, String messageMa) {
 		
-		try {
-			long cooldownMa = Main.getCooldownMaAmount(channelMa);
-			if( !(cooldownMa == -1) && Math.abs(System.currentTimeMillis() - Main.getLastMaClock(channelMa)) < cooldownMa) { return; } 
-		}
-		catch(Exception e) { System.out.println(e.getMessage()); }
+		if(channelMa.toString().equals("#mabotlmao")) { onWhisper(user,messageMa); return; }
 		
-		try{ Main.setLastMaClock(channelMa); } catch(Exception e) { System.out.println(e.getMessage()); }
+		if(!Main.readyToSendMessage(channelMa)){ return; }
 		
 		int indexMa;
 		String newMessageMa;
@@ -37,14 +62,20 @@ public class MyBot extends TwitchBot{
 					&& !(indexMa == 0 && messageMa.length() != triggerMa.length()) 
 					&& (indexMa-1 < 0 || messageMa.charAt(indexMa-1)==' ' || indexMa+triggerMa.length() >= messageMa.length() || messageMa.charAt(indexMa+triggerMa.length())==' ' ) 
 			) {
-				try{ if(random.nextInt(Main.getProbabilityMaAmount(channelMa)) != 0) { return; } } catch(Exception e) { System.out.println(e.getMessage()); }
-		
-				newMessageMa = messageMa.substring(0,indexMa) + " " + messageMa.substring(indexMa,indexMa + triggerMa.length());
-				if(triggerMa.equals("saw")) { newMessageMa += " con"; }
-				if(triggerMa.equals("dragon") || triggerMa.equals("sucon") || triggerMa.equals("saw") || triggerMa.equals("sawcon")){ newMessageMa += " dese"; }
-				if(!triggerMa.equals("joe")) { newMessageMa += " balls"; }
-				else { newMessageMa += " mama"; }
-				if(triggerMa.equals("dragon")) { newMessageMa += " on ya face"; }
+				if(!Main.dueToPost(channelMa)) { return; }
+				
+				lmaoadd:
+				if(true) {
+					newMessageMa = messageMa.substring(0,indexMa) + " " + messageMa.substring(indexMa,indexMa + triggerMa.length());
+					if(triggerMa.equals("candice")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-4) + " "+"dice dick fit in ya mouth"; break lmaoadd;}
+					if(triggerMa.equals("dixon")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-2) + " "+"on ya face"; break lmaoadd;}
+					if(triggerMa.equals("saw")) { newMessageMa += " con"; }
+					if(triggerMa.equals("dragon") || triggerMa.equals("sucon") || triggerMa.equals("saw") || triggerMa.equals("sawcon")){ newMessageMa += " dese"; }
+					if(!triggerMa.equals("joe")) { newMessageMa += " balls"; }
+					else { newMessageMa += " mama"; }
+					if(triggerMa.equals("dragon")) { newMessageMa += " on ya face"; }
+				}
+				
 				newMessageMa += " lmao";
 				this.sendMessage(newMessageMa,channelMa);
 				return;
@@ -52,6 +83,8 @@ public class MyBot extends TwitchBot{
 		}
 	}
 }
+
+
 
 
 //allma and no cutoff

@@ -1,93 +1,102 @@
 package main;
 import bots.MyBot;
 
+import java.util.HashMap;
+import java.util.Random;
+
 import com.cavariux.twitchirc.Chat.Channel;
+import com.cavariux.twitchirc.Chat.User;
+
+class MaBotChannel{
+	public Channel channel;
+	public long lastTimeStamp;
+	public long cooldownAmount;
+	public int replacementProbability;
+	
+	MaBotChannel(Channel c, long cooldown, int probability){
+		channel = c;
+		lastTimeStamp = -1;
+		cooldownAmount = cooldown;
+		replacementProbability = probability;
+	}
+	
+	public String toString() { return channel.toString(); }
+}
 
 public class Main {
+	public final static long version = 3L;
 	
-	final static String[] channels = {"#exeloar", "#capp_kap"};
-	static long[] channelLastMaClocks = new long[channels.length]; 
-	static int[] channelCooldownMaAmounts = new int[channels.length];
-	static int[] probabilityMaReplacements = new int[channels.length];
 	
-	final static long version = 3L;
-	
-	public static long lastMaClock = -1000000L;
-	
-	private static void initializeLastMaClocks() { 
-		for(int i = 0; i < channels.length; i++) { channelLastMaClocks[i] = -1; }
-	}
-	
-	public static void setLastMaClock(Channel channelMa) throws Exception {
-		String channelNameMa = channelMa.toString();
-		for(int i = 0; i < channels.length; i++) {
-			if(channelNameMa.equalsIgnoreCase(channels[i])) {
-				channelLastMaClocks[i] = System.currentTimeMillis();
-			}
-		}
-		throw new Exception("Channel does not exist");
-	}
-	public static long getLastMaClock(Channel channelMa) throws Exception {
-		String channelNameMa = channelMa.toString();
-		for(int i = 0; i < channels.length; i++) {
-			if(channelNameMa.equalsIgnoreCase(channels[i])) {
-				return channelLastMaClocks[i];
-			}
-		}
-		throw new Exception("Channel does not exist");
-	}
-	
-	private static void initializeCooldownMaAmounts() {
-		channelCooldownMaAmounts[0] = 0;
-		for(int i = 1;i<channels.length;i++) {
-			channelCooldownMaAmounts[i] = 5;
-		}
-	}
-
-	public static int getCooldownMaAmount(Channel channelMa) throws Exception {
-		String channelNameMa = channelMa.toString();
-		for(int i = 0; i < channels.length; i++) {
-			if(channelNameMa.equalsIgnoreCase(channels[i])) {
-				return channelCooldownMaAmounts[i];
-			}
-		}
-		throw new Exception("Channel does not exist");
-	}
-	
-	private static void initializeProbabilityMaAmounts() {
-		probabilityMaReplacements[0] = 1;
-		for(int i = 1;i<channels.length;i++) {
-			probabilityMaReplacements[i] = 1;
-		}
-	}
-
-	public static int getProbabilityMaAmount(Channel channelMa) throws Exception {
-		String channelNameMa = channelMa.toString();
-		for(int i = 0; i < channels.length; i++) {
-			if(channelNameMa.equalsIgnoreCase(channels[i])) {
-				return probabilityMaReplacements[i];
-			}
-		}
-		throw new Exception("Channel does not exist");
-	}
-	
+	public static HashMap<String,MaBotChannel> channels = new HashMap<String,MaBotChannel>();
+	public static MyBot bot = new MyBot();
+	public static Random random = new Random();
 
 	
 	private static void initialize() {
-		initializeLastMaClocks();
-		initializeCooldownMaAmounts();
-		initializeProbabilityMaAmounts();
+		bot.joinChannel("#mabotlmao");
+		//Load users from file
 	}
 	
 	public static void main(String[]args) {
-		
-		initialize();
-
-		MyBot bot = new MyBot();
 		bot.connect();
-		for(String channel : channels) {
-			bot.sendMessage("ma bot lmao running version " + version, bot.joinChannel(channel));
-		}
+		initialize();
 		bot.start();
 	}
+	
+	public static void addBotToChannel(User user) {
+		MaBotChannel entry = channels.get(user.toString());
+		if(entry==null){
+			entry = new MaBotChannel(bot.joinChannel("#"+user.toString()),1000,1);
+			channels.put(user.toString(),entry);
+			bot.sendMessage("ma bot lmao running version " + version, entry.channel);
+			bot.whisper(user, "Successfully added ma bot lmao");
+		}
+		else { bot.whisper(user, "Failed to add bot, already exists in your channel"); }
+	}
+	public static void removeBotFromChannel(User user) {
+		MaBotChannel entry = channels.get(user.toString());
+		if(entry!=null){
+			bot.sendMessage("goodbyema", entry.channel);
+			bot.partChannel(entry.toString());
+			channels.remove(user.toString());
+			bot.whisper(user, "Successfully removed ma bot lmao");
+		}
+		else { bot.whisper(user, "Failed to remove bot, does not exist in your channel"); }
+	}
+	public static void setDelay(User user, String delay) {
+		MaBotChannel entry = channels.get(user.toString());
+		if(entry!=null){
+			try{
+				entry.cooldownAmount = Long.parseLong(delay);
+				bot.whisper(user, "Successfully changed cooldown to "+Long.parseLong(delay)+" ms");
+			}
+			catch(Exception e) {
+				bot.whisper(user, "Cooldown amount not recognized");
+			}
+		}
+		else { bot.whisper(user, "Failed to change cooldown, bot does not exist in your channel"); }
+	}
+	public static void setRatio(User user, String ratio) {
+		MaBotChannel entry = channels.get(user.toString());
+		if(entry!=null){
+			try{
+				entry.replacementProbability = Integer.parseInt(ratio);
+				bot.whisper(user, "Successfully changed probability ratio to 1:"+Long.parseLong(ratio));
+			}
+			catch(Exception e) {
+				bot.whisper(user, "Probability ratio not recognized");
+			}
+		}
+		else { bot.whisper(user, "Failed to change probability ratio, bot does not exist in your channel"); }
+	}
+
+	public static boolean readyToSendMessage(Channel channelMa) {
+		MaBotChannel entry = channels.get(channelMa.toString().substring(1));
+		return 
+				entry.lastTimeStamp == -1 || 
+				Math.abs(System.currentTimeMillis() - entry.lastTimeStamp) >= entry.cooldownAmount
+		;
+	}
+
+	public static boolean dueToPost(Channel channelMa) { return random.nextInt(channels.get(channelMa.toString().substring(1)).replacementProbability) == 0; }
 }
