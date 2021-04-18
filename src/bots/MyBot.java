@@ -40,7 +40,7 @@ public class MyBot extends TwitchBot{
 			
 			else {
 				for(String s: helpMessage) {
-					this.whisper(user, s);
+					//this.whisper(user, s);
 				}
 				return;
 			}

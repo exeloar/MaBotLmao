@@ -49,7 +49,8 @@ public class Main {
 			entry = new MaBotChannel(bot.joinChannel("#"+user.toString()),1000,1);
 			channels.put(user.toString(),entry);
 			bot.sendMessage("ma bot lmao running version " + version, entry.channel);
-			bot.whisper(user, "Successfully added ma bot lmao");
+			//bot.whisper(user, "Successfully added ma bot lmao");
+			bot.sendMessage("Successfully added ma bot lmao",entry.channel);
 		}
 		else { bot.whisper(user, "Failed to add bot, already exists in your channel"); }
 	}
@@ -59,7 +60,7 @@ public class Main {
 			bot.sendMessage("goodbyema", entry.channel);
 			bot.partChannel(entry.toString());
 			channels.remove(user.toString());
-			bot.whisper(user, "Successfully removed ma bot lmao");
+			//bot.whisper(user, "Successfully removed ma bot lmao");
 		}
 		else { bot.whisper(user, "Failed to remove bot, does not exist in your channel"); }
 	}
@@ -68,7 +69,8 @@ public class Main {
 		if(entry!=null){
 			try{
 				entry.cooldownAmount = Long.parseLong(delay);
-				bot.whisper(user, "Successfully changed cooldown to "+Long.parseLong(delay)+" ms");
+				bot.sendMessage("Successfully changed cooldown to "+Long.parseLong(delay)+" ms",entry.channel);
+				//bot.whisper(user, "Successfully changed cooldown to "+Long.parseLong(delay)+" ms");
 			}
 			catch(Exception e) {
 				bot.whisper(user, "Cooldown amount not recognized");
@@ -81,7 +83,8 @@ public class Main {
 		if(entry!=null){
 			try{
 				entry.replacementProbability = Integer.parseInt(ratio);
-				bot.whisper(user, "Successfully changed probability ratio to 1:"+Long.parseLong(ratio));
+				bot.sendMessage("Successfully changed probability ratio to 1:"+Long.parseLong(ratio),entry.channel);
+				//bot.whisper(user, "Successfully changed probability ratio to 1:"+Long.parseLong(ratio));
 			}
 			catch(Exception e) {
 				bot.whisper(user, "Probability ratio not recognized");
