@@ -31,6 +31,8 @@ public class MyBot extends TwitchBot{
 	public void onWhisper(User user, String messageMa) {
 		messageMa = messageMa.replaceAll("!", "");
 		
+		if(user.toString().equals("exeloar") && messageMa.equals("restartma")) { Main.restartMaBot(); }
+		
 		String[] args = messageMa.split(" ");
 		for(int i = 0 ; i < args.length;i++) {
 			if(args[i].equals("addma")) { Main.addBotToChannel(user); }

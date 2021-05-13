@@ -1,8 +1,14 @@
 package main;
 import bots.MyBot;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 
 import com.cavariux.twitchirc.Chat.Channel;
 import com.cavariux.twitchirc.Chat.User;
@@ -24,17 +30,29 @@ class MaBotChannel{
 }
 
 public class Main {
-	public final static long version = 3L;
+	public final static long version = 4L;
 	
 	
 	public static HashMap<String,MaBotChannel> channels = new HashMap<String,MaBotChannel>();
 	public static MyBot bot = new MyBot();
 	public static Random random = new Random();
 
+	private static void loadUsers() {
+		try {
+			Scanner input = new Scanner(new File("data.txt"));
+			while(input.hasNextLine()) {
+				String[] channel = input.nextLine().split(",");
+				channels.put(channel[0],new MaBotChannel(bot.joinChannel("#"+channel[0]),Long.parseLong(channel[1]),Integer.parseInt(channel[2])));
+				bot.sendMessage("ma bot lmao running version " + version, channels.get(channel[0]).channel);
+			}
+			input.close();
+		} 
+		catch (IOException e) {}
+	}
 	
 	private static void initialize() {
 		bot.joinChannel("#mabotlmao");
-		//Load users from file
+		loadUsers();
 	}
 	
 	public static void main(String[]args) {
@@ -102,4 +120,17 @@ public class Main {
 	}
 
 	public static boolean dueToPost(Channel channelMa) { return random.nextInt(channels.get(channelMa.toString().substring(1)).replacementProbability) == 0; }
+	
+	public static void restartMaBot() {
+		try {
+			BufferedWriter datadump = new BufferedWriter(new FileWriter(new File("data.txt")));
+			for(Map.Entry<String,MaBotChannel> entry : channels.entrySet()) {
+				bot.sendMessage("Restarting ma bot lmao",entry.getValue().channel);
+				datadump.write(entry.getKey()+","+entry.getValue().cooldownAmount+","+entry.getValue().replacementProbability+"\n");
+			}
+			datadump.close();
+		} 
+		catch (IOException e) {}
+		System.exit(0);
+	}
 }
