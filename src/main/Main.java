@@ -36,7 +36,8 @@ public class Main {
 	public static HashMap<String,MaBotChannel> channels = new HashMap<String,MaBotChannel>();
 	public static MyBot bot = new MyBot();
 	public static Random random = new Random();
-
+	public static Channel myChannel;
+	
 	private static void loadUsers() {
 		try {
 			Scanner input = new Scanner(new File("data.txt"));
@@ -51,7 +52,7 @@ public class Main {
 	}
 	
 	private static void initialize() {
-		bot.joinChannel("#mabotlmao");
+		myChannel = bot.joinChannel("#mabotlmao");
 		loadUsers();
 	}
 	
@@ -132,5 +133,19 @@ public class Main {
 		} 
 		catch (IOException e) {}
 		System.exit(0);
+	}
+
+	public static void numberMaUsers() {
+		bot.sendMessage("Number of Active Users: "+channels.size(),myChannel);
+	}
+
+	public static void checkMaUsers(String user) {
+		MaBotChannel entry = channels.get(user);
+		if(entry!=null) {
+			bot.sendMessage("User "+user+": "+entry.cooldownAmount+","+entry.replacementProbability,myChannel);
+		}
+		else {
+			bot.sendMessage("User "+user+" has not activated MaBotLmao",myChannel);
+		}
 	}
 }

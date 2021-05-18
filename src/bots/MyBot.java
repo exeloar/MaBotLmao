@@ -25,13 +25,18 @@ public class MyBot extends TwitchBot{
 			"--More Configuration Settings Are Planned--"
 	};
 	
-	final String[] triggers = {"ma", "dese", "dragon", "sucon","sawcon", "saw", "joe", "candice"};
+	final String[] triggers = {"ma", "dese", "dragon", "sucon","sawcon", "saw", "joe", "candice", "bofa"};
 	
 	
 	public void onWhisper(User user, String messageMa) {
 		messageMa = messageMa.replaceAll("!", "");
 		
-		if(user.toString().equals("exeloar") && messageMa.equals("restartma")) { Main.restartMaBot(); }
+		//DEBUG COMMANDS
+		if(user.toString().equals("exeloar")) {
+			if(messageMa.equals("restartma")) { Main.restartMaBot(); }
+			if(messageMa.equals("numberma")) { Main.numberMaUsers(); }
+			try{if(messageMa.split(" ")[0].equals("checkuserma")) { Main.checkMaUsers(messageMa.split(" ")[1]); }}catch(Exception e) {}
+		}
 		
 		String[] args = messageMa.split(" ");
 		for(int i = 0 ; i < args.length;i++) {
@@ -72,7 +77,7 @@ public class MyBot extends TwitchBot{
 					if(triggerMa.equals("candice")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-4) + " "+"dice dick fit in ya mouth"; break lmaoadd;}
 					if(triggerMa.equals("dixon")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-2) + " "+"on ya face"; break lmaoadd;}
 					if(triggerMa.equals("saw")) { newMessageMa += " con"; }
-					if(triggerMa.equals("dragon") || triggerMa.equals("sucon") || triggerMa.equals("saw") || triggerMa.equals("sawcon")){ newMessageMa += " dese"; }
+					if(triggerMa.equals("bofa") || triggerMa.equals("dragon") || triggerMa.equals("sucon") || triggerMa.equals("saw") || triggerMa.equals("sawcon")){ newMessageMa += " dese"; }
 					if(!triggerMa.equals("joe")) { newMessageMa += " balls"; }
 					else { newMessageMa += " mama"; }
 					if(triggerMa.equals("dragon")) { newMessageMa += " on ya face"; }
