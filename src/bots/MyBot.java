@@ -85,8 +85,8 @@ public class MyBot extends TwitchBot{
 					if(triggerMa.equals("candice")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-4) + " "+"dice dick fit in ya mouth"; break lmaoadd;}
 					if(triggerMa.equals("dixon")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-2) + " "+"on ya face"; break lmaoadd;}
 					if(triggerMa.equals("saw")) { newMessageMa += " con"; }
-					if(triggerMa.equals("tess")) { newMessageMa += " tickles"; }
-					if(triggerMa.equals("jenna")) { newMessageMa += " talls"; }
+					if(triggerMa.equals("tess")) { newMessageMa += " tickles"; break lmaoadd;}
+					if(triggerMa.equals("jenna")) { newMessageMa += " talls"; break lmaoadd;}
 					if(triggerMa.equals("bofa") || triggerMa.equals("dragon") || triggerMa.equals("sucon") || triggerMa.equals("saw") || triggerMa.equals("sawcon") || triggerMa.equals("vitamin c") || triggerMa.equals("goblin") ){ newMessageMa += " dese"; }
 					if(!triggerMa.equals("joe") && !triggerMa.equals("tess") && !triggerMa.equals("jenna")) { newMessageMa += " balls"; }
 					else { newMessageMa += " mama"; }

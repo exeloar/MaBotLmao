@@ -127,6 +127,7 @@ public class Main {
 			BufferedWriter datadump = new BufferedWriter(new FileWriter(new File("data.txt")));
 			for(Map.Entry<String,MaBotChannel> entry : channels.entrySet()) {
 				bot.sendMessage("Restarting ma bot lmao",entry.getValue().channel);
+				try{Thread.sleep(100);}catch(Exception e) {} //FIXME: probably not a good idea
 				datadump.write(entry.getKey()+","+entry.getValue().cooldownAmount+","+entry.getValue().replacementProbability+"\n");
 			}
 			datadump.close();
