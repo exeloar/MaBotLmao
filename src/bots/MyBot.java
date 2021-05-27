@@ -1,18 +1,26 @@
 package bots;
 
-import java.util.Random;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import com.cavariux.twitchirc.Chat.Channel;
 import com.cavariux.twitchirc.Chat.User;
 import com.cavariux.twitchirc.Core.TwitchBot;
+
 
 import main.Main;
 
 public class MyBot extends TwitchBot{
 	
 	public MyBot() {
-		this.setUsername("mabotlmao");
-		this.setOauth_Key("oauth:km7xcs8h16m032o7l6ky90z5v9mf48");
+		try {
+			Scanner input = new Scanner(new File("user.txt"));
+			String[] info = input.nextLine().split(",");         //Format : username,oauthkey
+			this.setUsername(info[0]);
+			this.setOauth_Key(info[1]);
+		} 
+		catch (FileNotFoundException e) { System.out.println("User File not found"); System.exit(1); }
 	}
 	
 	final String[] helpMessage = {
@@ -25,7 +33,7 @@ public class MyBot extends TwitchBot{
 			"--More Configuration Settings Are Planned--"
 	};
 	
-	final String[] triggers = {"ma", "dese", "dragon", "sucon","sawcon", "saw", "joe", "candice", "bofa"};
+	final String[] triggers = {"ma", "dese", "dragon", "sucon","sawcon", "saw", "joe", "candice", "bofa", "vitamin c", "tess", "jenna", "goblin"};
 	
 	
 	public void onWhisper(User user, String messageMa) {
@@ -77,8 +85,10 @@ public class MyBot extends TwitchBot{
 					if(triggerMa.equals("candice")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-4) + " "+"dice dick fit in ya mouth"; break lmaoadd;}
 					if(triggerMa.equals("dixon")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-2) + " "+"on ya face"; break lmaoadd;}
 					if(triggerMa.equals("saw")) { newMessageMa += " con"; }
-					if(triggerMa.equals("bofa") || triggerMa.equals("dragon") || triggerMa.equals("sucon") || triggerMa.equals("saw") || triggerMa.equals("sawcon")){ newMessageMa += " dese"; }
-					if(!triggerMa.equals("joe")) { newMessageMa += " balls"; }
+					if(triggerMa.equals("tess")) { newMessageMa += " tickles"; }
+					if(triggerMa.equals("jenna")) { newMessageMa += " talls"; }
+					if(triggerMa.equals("bofa") || triggerMa.equals("dragon") || triggerMa.equals("sucon") || triggerMa.equals("saw") || triggerMa.equals("sawcon") || triggerMa.equals("vitamin c") || triggerMa.equals("goblin") ){ newMessageMa += " dese"; }
+					if(!triggerMa.equals("joe") && !triggerMa.equals("tess") && !triggerMa.equals("jenna")) { newMessageMa += " balls"; }
 					else { newMessageMa += " mama"; }
 					if(triggerMa.equals("dragon")) { newMessageMa += " on ya face"; }
 				}
