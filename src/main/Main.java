@@ -30,7 +30,7 @@ class MaBotChannel{
 }
 
 public class Main {
-	public final static long version = 6L;
+	public final static long version = 7L;
 	
 	
 	public static HashMap<String,MaBotChannel> channels = new HashMap<String,MaBotChannel>();
@@ -149,4 +149,6 @@ public class Main {
 			bot.sendMessage("User "+user+" has not activated MaBotLmao",myChannel);
 		}
 	}
+
+	public static void updateCooldown(Channel channelMa) { channels.get(channelMa.toString().substring(1)).lastTimeStamp = System.currentTimeMillis(); }
 }

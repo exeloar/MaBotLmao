@@ -8,7 +8,6 @@ import com.cavariux.twitchirc.Chat.Channel;
 import com.cavariux.twitchirc.Chat.User;
 import com.cavariux.twitchirc.Core.TwitchBot;
 
-
 import main.Main;
 
 public class MyBot extends TwitchBot{
@@ -97,6 +96,7 @@ public class MyBot extends TwitchBot{
 				
 				newMessageMa += " lmao";
 				this.sendMessage(newMessageMa,channelMa);
+				Main.updateCooldown(channelMa);
 				return;
 			}
 		}
