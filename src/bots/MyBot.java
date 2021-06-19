@@ -81,7 +81,9 @@ public class MyBot extends TwitchBot{
 				
 				lmaoadd:
 				if(true) {
-					newMessageMa = messageMa.substring(0,indexMa) + " " + messageMa.substring(indexMa,indexMa + triggerMa.length());
+					newMessageMa = messageMa.substring(0,indexMa);
+					if(messageMa.charAt(indexMa-1)!= ' '){ newMessageMa+= " "; } 
+					newMessageMa += messageMa.substring(indexMa,indexMa + triggerMa.length());
 					if(triggerMa.equals("candice")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-4) + " "+"dice dick fit in ya mouth"; break lmaoadd;}
 					if(triggerMa.equals("dixon")) { newMessageMa = newMessageMa.substring(0,newMessageMa.length()-2) + " "+"on ya face"; break lmaoadd;}
 					if(triggerMa.equals("saw")) { newMessageMa += " con"; }
