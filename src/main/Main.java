@@ -43,6 +43,7 @@ public class Main {
 			Scanner input = new Scanner(new File("data.txt"));
 			while(input.hasNextLine()) {
 				String[] channel = input.nextLine().split(",");
+				try{Thread.sleep(100);}catch(Exception e) {}
 				channels.put(channel[0],new MaBotChannel(bot.joinChannel("#"+channel[0]),Long.parseLong(channel[1]),Integer.parseInt(channel[2])));
 				bot.sendMessage("ma bot lmao running version " + version, channels.get(channel[0]).channel);
 			}
