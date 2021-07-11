@@ -76,6 +76,8 @@ public class MyBot extends TwitchBot{
 		
 		newMessage += message.substring(info.index,info.index + info.trigger.length());
 		
+		boolean[] capitalPattern = getCapitalizationPattern(message,info.index,info.trigger.length());
+		
 		switch(info.trigger) {
 			case("candice"): 	
 				{ newMessage = newMessage.substring(0,newMessage.length()-4) + " dice dick fit in ya mouth"; 	break; 	}
@@ -101,10 +103,13 @@ public class MyBot extends TwitchBot{
 		newMessage += " lmao";
 		
 		
-		this.sendMessage(newMessage,channel);
+		this.sendMessage(applyCapitalizationPattern(newMessage,info.index, capitalPattern),channel);
 		Main.updateCooldown(channel);
 		return;
 	}
+
+
+
 
 	private boolean checkIfDev(User user) {
 		for(String dev : devs) {
@@ -141,9 +146,7 @@ public class MyBot extends TwitchBot{
 		
 		String after = message.substring(Math.min(message.length(),index + trigger.length())).split(" ")[0];
 		
-		System.out.println("Before:{"+before+"}, After:{"+after+"}, splitlength:"+split.length);
-		
-		if(split.length == 1) { return index + trigger.length() + after.length() == message.length(); } //do not replace first word of long message
+		if(split.length == 1) { return index + trigger.length() + after.length() == message.length() && isIgnores(after); } //do not replace first word of long message
 		
 		return isIgnores(before) || isIgnores(after); //at the start or end of word? (disregarding ignored characters like punctuation)
 	}
@@ -160,6 +163,21 @@ public class MyBot extends TwitchBot{
 			if(!found) { return false; }
 		}
 		return true;
+	}
+	private boolean[] getCapitalizationPattern(String message, int index, int length) {
+		boolean[] pattern = new boolean[length];
+		for(int i =0; i < length; i++) {
+			pattern[i] = Character.isUpperCase(message.charAt(index+i));
+		}
+		return pattern;
+	}
+	private String applyCapitalizationPattern(String message, int index, boolean[] pattern) {
+		for(int i = index; i < message.length(); i++) {
+			if(pattern[i%pattern.length]) {
+				message = message.substring(0,i) + Character.toUpperCase(message.charAt(i))+ message.substring(i+1);
+			}
+		}
+		return message;
 	}
 }
 

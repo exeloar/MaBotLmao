@@ -30,7 +30,7 @@ class MaBotChannel{
 }
 
 public class Main {
-	public final static long version = 7L;
+	public final static long version = 8L;
 	
 	
 	public static HashMap<String,MaBotChannel> channels = new HashMap<String,MaBotChannel>();
